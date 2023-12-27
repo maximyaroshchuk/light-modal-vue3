@@ -1,22 +1,22 @@
 <p align="center">
 
-# Ray Modal Vue 3
+# Light Modal Vue 3
 
 ### How to install ###
 
 ```git
-npm i ray-modal-vue3
+npm i light-modal-vue3
 ```
 
 Easy to use, highly customizable Vue.js modal library.
 
-### 😎 [Examples](https://raymodal.netlify.app/)
+### 😎 [Get started](https://lightmodal.netlify.app/)
 
-### 🤓 [Documentation](https://raymodal.netlify.app/docs/)
+### 🤓 [Documentation](https://lightmodal.netlify.app/docs/)
 
-### 🤖 [Changelog](https://github.com/maximyaroshchuk/ray-modal-v3/tags)
+### 🤖 [Changelog](https://github.com/maximyaroshchuk/light-modal-vue3/tags)
 
-### 🙌 [Looking for maintainers](https://github.com/maximyaroshchuk/ray-modal-v3/issues/)
+### 🙌 [Looking for maintainers](https://github.com/maximyaroshchuk/light-modal-vue3/issues/)
 
 ### 💰 [Sponsorship](https://www.buymeacoffee.com/rainoldwebi)
 
