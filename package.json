@@ -1,0 +1,35 @@
+{
+  "name": "light-modal-vue3",
+  "version": "1.0.0",
+  "dependencies": {
+    "vue": "^3.3.13"
+  },
+  "description": "Light Modal Vue 3 is very simple and light-weight modal library for vue3",
+  "source": "index.js",
+  "devDependencies": {},
+  "files": [
+    "./"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maximyaroshchuk/light-modal-vue3.git"
+  },
+  "author": "Maxim Yaroshchuk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maximyaroshchuk/light-modal-vue3/issues"
+  },
+  "homepage": "https://github.com/maximyaroshchuk/light-modal-vue3#readme",
+  "keywords": [
+    "light-modal",
+    "light",
+    "vue",
+    "modal",
+    "dialog",
+    "popup"
+  ],
+  "main": "index.js"
+}
