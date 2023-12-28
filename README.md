@@ -12,7 +12,7 @@ Easy to use, highly customizable Vue.js modal library.
 
 ### 😎 [Get started](https://lightmodal.netlify.app/)
 
-### 🤓 [Documentation](https://lightmodal.netlify.app/docs/)
+### 🤓 [Documentation](https://lightmodal.netlify.app/plugin/getting-started)
 
 ### 🤖 [Changelog](https://github.com/maximyaroshchuk/light-modal-vue3/tags)
 
