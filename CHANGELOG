@@ -1,0 +1,4 @@
+v 1.1.0
+
+* Props buttonsContainerClass, closeIcon, closeButtonText, buttons, backgroundColor, draggable, resizable
+* Add new utils to Normalize contrast when you change background

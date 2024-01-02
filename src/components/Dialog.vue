@@ -2,13 +2,13 @@
     <div
         ref="dialogElement"
         class="light-modal-dialog"
-        :style="`width: ${width}px; height: ${height}px; top: ${top}px; left: ${left}px;`"
+        :style="`width: ${width}px; height: ${height}px; top: ${top}px; left: ${left}px; background: ${backgroundColor}; color: ${contrastColor()}`"
     >
         <div
             class="light-modal-top-right-buttons"
         >
             <button
-                :class="`light-modal-close-button ${closeIcon && 'light-modal-close-icon'}`"
+                :class="['light-modal-close-button', closeIcon && 'light-modal-close-icon', getIconColorClass()]"
                 :title="'Close'"
                 @click="this.$modal.close()"
             >
@@ -18,7 +18,7 @@
 
         <div class="light-modal-content">
             <div
-                class="light-modal-content-title"
+                :class="`light-modal-content-title ${draggableClass}`"
             >
                 {{ title }}
             </div>
@@ -32,7 +32,11 @@
             </div>
 
             <slot name="buttons">
-                <div v-if="buttons" :class="buttonsContainerClass">
+                <div
+                    v-if="buttons"
+                    :class="`light-modal-buttons ${buttonsContainerClass}`"
+                    :style="buttonsContainerStyles"
+                >
                     <template v-for="(button, index) in buttons" :key="index">
                         <button
                             v-bind="button.options"
@@ -41,18 +45,29 @@
                             @click="button.click()"
                             v-html="button.text"
                         />
+
+                        <button
+                            type="button"
+                            :style="defaultCloseButtonStyles"
+                            class="light-button-close"
+                            @click="PluginCore.close();"
+                        >
+                            {{ closeButtonText }}
+                        </button>
                     </template>
                 </div>
             </slot>
         </div>
 
-        <div class="light-modal-resizer-triangle"></div>
+        <div v-if="resizable" class="light-modal-resizer-triangle"></div>
     </div>
 </template>
 
 <script>
 import Draggable from '../utils/Draggable';
 import Resizable from "../utils/Resizable";
+import NormalizeContrast from "../utils/NormalizeContrast";
+import PluginCore from "../PluginCore";
 
 export default {
     name: 'Dialog',
@@ -63,6 +78,22 @@ export default {
         };
     },
     props: {
+        closeButtonText: {
+            type: String,
+            default: 'Close'
+        },
+        backgroundColor: {
+            type: String,
+            default: '#fff'
+        },
+        draggable: {
+            type: Boolean,
+            default: false,
+        },
+        resizable: {
+            type: Boolean,
+            default: false,
+        },
         title: {
             type: String
         },
@@ -85,28 +116,59 @@ export default {
         buttonsContainerClass: {
             type: [Object, Array],
             default() {
-                return ['light-modal-buttons'];
+                return [];
             },
         },
     },
     mounted() {
         this.initModalPosition();
-        this.draggable = new Draggable(this.$refs.dialogElement);
+        if (this.draggable) {
+            this.draggableUtility = new Draggable(this.$refs.dialogElement);
+        }
         const resizerElement = document.querySelector('.light-modal-resizer-triangle');
-        this.resizable = new Resizable(this.$refs.dialogElement, resizerElement, {
-            minWidth: 150,
-            minHeight: 200,
-        });
+        if (this.resizable) {
+            this.resizableUtility = new Resizable(this.$refs.dialogElement, resizerElement, {
+                minWidth: 150,
+                minHeight: 200,
+            });
+        }
     },
     methods: {
         initModalPosition() {
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
+            const updateModalPosition = () => {
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
 
-            this.left = (windowWidth - this.width) / 2;
-            this.top = (windowHeight - this.height) / 2;
+                this.left = (windowWidth - this.width) / 2;
+                this.top = (windowHeight - this.height) / 2;
+            };
+
+            updateModalPosition();
+            window.addEventListener('resize', updateModalPosition);
+        },
+        getIconColorClass() {
+            const contrastInstance = new NormalizeContrast(this.backgroundColor);
+            return contrastInstance.getContrastColor() === 'light' ? 'light-icon' : 'dark-icon';
+        },
+        contrastColor() {
+            const contrastInstance = new NormalizeContrast(this.backgroundColor);
+            return contrastInstance.getContrastColor() === 'light' ? '#000000' : '#ffffff';
         },
     },
+    computed: {
+        PluginCore() {
+            return PluginCore
+        },
+        draggableClass() {
+            return this.draggable ? 'draggable' : ''
+        },
+        buttonsContainerStyles() {
+            return { 'border-color': this.contrastColor() }
+        },
+        defaultCloseButtonStyles() {
+            return { color: this.contrastColor() }
+        }
+    }
 };
 </script>
 
@@ -128,6 +190,10 @@ export default {
             cursor: pointer;
             transition: .15s all;
             opacity: .5;
+
+            &.dark-icon {
+                filter: invert(1);
+            }
 
             &:hover {
                 opacity: .75;
@@ -157,7 +223,9 @@ export default {
             font-weight: 600;
             font-size: 20px;
             line-height: 24px;
-            cursor: move;
+            &.draggable {
+                cursor: move;
+            }
 
             * {
                 width: fit-content;
@@ -183,7 +251,8 @@ export default {
                 justify-content: center;
                 padding: 0 0.5em;
                 border-radius: 4px;
-                height: 24px;
+                height: auto;
+                min-height: 24px;
                 transition: .15s all;
                 background-color: transparent;
                 border: 1px solid transparent;

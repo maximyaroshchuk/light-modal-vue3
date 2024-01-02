@@ -1,6 +1,6 @@
 {
   "name": "light-modal-vue3",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "dependencies": {
     "vue": "^3.3.13"
   },

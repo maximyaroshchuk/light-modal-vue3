@@ -1,6 +1,18 @@
 <template>
     <Container v-if="show">
-        <Dialog ref="dialog" :title="title" :width="width" :height="height" :buttons="pluginCore.buttons">
+        <Dialog
+            ref="dialog"
+            :title="title"
+            :draggable="draggable"
+            :resizable="resizable"
+            :width="width"
+            :height="height"
+            :background-color="backgroundColor"
+            :buttons="buttons"
+            :close-button-text="closeButtonText"
+            :close-icon="closeIcon"
+            :buttons-container-class="buttonsContainerClass"
+        >
             <template v-slot:content>
                 <slot name="content"></slot>
             </template>
@@ -21,8 +33,29 @@ export default {
       }
     },
     props: {
+        buttonsContainerClass: {
+          type: [Array, Object],
+        },
+        closeIcon: {
+            type: Boolean,
+        },
+        closeButtonText: {
+            type: String,
+        },
+        buttons: {
+            type: Array
+        },
+        backgroundColor: {
+            type: String,
+        },
         title: {
-            type:String
+            type: String
+        },
+        draggable: {
+            type: Boolean,
+        },
+        resizable: {
+            type: Boolean
         },
         height: {
             type: Number,
