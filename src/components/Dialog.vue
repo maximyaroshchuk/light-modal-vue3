@@ -8,11 +8,11 @@
             class="light-modal-top-right-buttons"
         >
             <button
-                :class="['light-modal-close-button', !closeIcon && 'light-modal-close-icon', getIconColorClass()]"
+                :class="['light-modal-close-button', !closeIconClass && 'light-modal-close-icon', getIconColorClass()]"
                 :title="'Close'"
                 @click="this.$modal.close()"
             >
-                <i v-if="closeIcon" :class="closeIcon" />
+                <i v-if="closeIconClass" :class="closeIconClass" />
             </button>
         </div>
 
@@ -34,7 +34,7 @@
             <slot name="buttons">
                 <div
                     :class="`light-modal-buttons ${buttonsContainerClass}`"
-                    :style="{ 'border-color': this.contrastColor() }"
+                    :style="{ 'border-color': this.contrastContainerBorder() }"
                 >
                     <template v-if="buttons" v-for="(button, index) in buttons" :key="index">
                         <button
@@ -97,8 +97,8 @@ export default {
         width: {
             type: Number,
         },
-        closeIcon: {
-            type: Boolean,
+        closeIconClass: {
+            type: String,
         },
         buttons: {
             type: Array,
@@ -137,6 +137,10 @@ export default {
             const contrastInstance = new NormalizeContrast(this.backgroundColor);
             return contrastInstance.getContrastColor() === 'light' ? 'light-icon' : 'dark-icon';
         },
+        contrastContainerBorder() {
+            const contrastInstance = new NormalizeContrast(this.backgroundColor);
+            return contrastInstance.getContrastColor() === 'light' ? '#eeeeee' : '#3b3b3b';
+        },
         contrastColor() {
             const contrastInstance = new NormalizeContrast(this.backgroundColor);
             return contrastInstance.getContrastColor() === 'light' ? '#000000' : '#ffffff';
@@ -169,6 +173,7 @@ export default {
             height: 24px;
             border: none;
             cursor: pointer;
+            background: transparent;
             transition: .15s all;
             opacity: .5;
 

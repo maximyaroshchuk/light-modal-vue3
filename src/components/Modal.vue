@@ -10,7 +10,7 @@
             :background-color="backgroundColor"
             :buttons="buttons"
             :close-button-text="closeButtonText"
-            :close-icon="closeIcon"
+            :close-icon-class="closeIconClass"
             :buttons-container-class="buttonsContainerClass"
         >
             <template v-slot:content>
@@ -38,9 +38,8 @@ export default {
                 return [];
             },
         },
-        closeIcon: {
-            type: Boolean,
-            default: false,
+        closeIconClass: {
+            type: String,
         },
         closeButtonText: {
             type: String,
