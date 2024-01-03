@@ -20,7 +20,6 @@
     </Container>
 </template>
 <script>
-import { ref, watchEffect } from 'vue';
 import Dialog from '../components/Dialog.vue';
 import Container from '../components/Container.vue';
 import pluginCore from '../PluginCore';
@@ -34,28 +33,39 @@ export default {
     },
     props: {
         buttonsContainerClass: {
-          type: [Array, Object],
+            type: [Array, Object],
+            default() {
+                return [];
+            },
         },
         closeIcon: {
             type: Boolean,
+            default: false,
         },
         closeButtonText: {
             type: String,
+            default: 'Close'
         },
         buttons: {
-            type: Array
+            type: Array,
+            default() {
+                return [];
+            },
         },
         backgroundColor: {
             type: String,
+            default: '#ffffff'
         },
         title: {
             type: String
         },
         draggable: {
             type: Boolean,
+            default: false,
         },
         resizable: {
-            type: Boolean
+            type: Boolean,
+            default: false,
         },
         height: {
             type: Number,

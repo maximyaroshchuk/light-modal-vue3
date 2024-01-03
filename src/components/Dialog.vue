@@ -8,11 +8,11 @@
             class="light-modal-top-right-buttons"
         >
             <button
-                :class="['light-modal-close-button', closeIcon && 'light-modal-close-icon', getIconColorClass()]"
+                :class="['light-modal-close-button', !closeIcon && 'light-modal-close-icon', getIconColorClass()]"
                 :title="'Close'"
                 @click="this.$modal.close()"
             >
-                <i v-if="!closeIcon" class="icon-ic_fluent_dismiss_24_regular" />
+                <i v-if="closeIcon" :class="closeIcon" />
             </button>
         </div>
 
@@ -35,7 +35,7 @@
                 <div
                     v-if="buttons"
                     :class="`light-modal-buttons ${buttonsContainerClass}`"
-                    :style="buttonsContainerStyles"
+                    :style="{ 'border-color': this.contrastColor() }"
                 >
                     <template v-for="(button, index) in buttons" :key="index">
                         <button
@@ -45,16 +45,15 @@
                             @click="button.click()"
                             v-html="button.text"
                         />
-
-                        <button
-                            type="button"
-                            :style="defaultCloseButtonStyles"
-                            class="light-button-close"
-                            @click="PluginCore.close();"
-                        >
-                            {{ closeButtonText }}
-                        </button>
                     </template>
+                    <button
+                        type="button"
+                        :style="{ color: contrastColor() }"
+                        class="light-button-close"
+                        @click="PluginCore.close();"
+                    >
+                        {{ closeButtonText }}
+                    </button>
                 </div>
             </slot>
         </div>
@@ -80,19 +79,15 @@ export default {
     props: {
         closeButtonText: {
             type: String,
-            default: 'Close'
         },
         backgroundColor: {
             type: String,
-            default: '#fff'
         },
         draggable: {
             type: Boolean,
-            default: false,
         },
         resizable: {
             type: Boolean,
-            default: false,
         },
         title: {
             type: String
@@ -105,19 +100,12 @@ export default {
         },
         closeIcon: {
             type: Boolean,
-            default: true,
         },
         buttons: {
             type: Array,
-            default() {
-                return [];
-            },
         },
         buttonsContainerClass: {
             type: [Object, Array],
-            default() {
-                return [];
-            },
         },
     },
     mounted() {
@@ -162,12 +150,6 @@ export default {
         draggableClass() {
             return this.draggable ? 'draggable' : ''
         },
-        buttonsContainerStyles() {
-            return { 'border-color': this.contrastColor() }
-        },
-        defaultCloseButtonStyles() {
-            return { color: this.contrastColor() }
-        }
     }
 };
 </script>
@@ -240,7 +222,7 @@ export default {
         .light-modal-buttons {
             display: flex;
             padding: 16px 16px 24px 16px;
-            height: 72px;
+            height: auto;
             flex: 0 1 auto;
             justify-content: flex-end;
             border-top: 1px solid #eee;
@@ -250,6 +232,7 @@ export default {
                 align-items: center;
                 justify-content: center;
                 padding: 0 0.5em;
+                font-size: 14px;
                 border-radius: 4px;
                 height: auto;
                 min-height: 24px;
