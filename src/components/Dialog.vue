@@ -46,6 +46,7 @@
                         />
                     </template>
                     <button
+                        v-else
                         type="button"
                         :style="{ color: contrastColor() }"
                         class="light-button-close"
