@@ -10,6 +10,7 @@
             :background-color="backgroundColor"
             :buttons="buttons"
             :close-button-text="closeButtonText"
+            :top-close-icon-container-class="topCloseIconContainerClass"
             :close-icon-class="closeIconClass"
             :buttons-container-class="buttonsContainerClass"
         >
@@ -37,6 +38,9 @@ export default {
             default() {
                 return [];
             },
+        },
+        topCloseIconContainerClass: {
+            type: String,
         },
         closeIconClass: {
             type: String,

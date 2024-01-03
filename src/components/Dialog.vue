@@ -5,7 +5,7 @@
         :style="`width: ${width}px; height: ${height}px; top: ${top}px; left: ${left}px; background: ${backgroundColor}; color: ${contrastColor()}`"
     >
         <div
-            class="light-modal-top-right-buttons"
+            :class="`light-modal-top-right-buttons ${topCloseIconContainerClass}`"
         >
             <button
                 :class="['light-modal-close-button', !closeIconClass && 'light-modal-close-icon', getIconColorClass()]"
@@ -77,6 +77,9 @@ export default {
     },
     props: {
         closeButtonText: {
+            type: String,
+        },
+        topCloseIconContainerClass: {
             type: String,
         },
         backgroundColor: {
