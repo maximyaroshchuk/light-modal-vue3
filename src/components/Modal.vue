@@ -51,9 +51,6 @@ export default {
         },
         buttons: {
             type: Array,
-            default() {
-                return [];
-            },
         },
         backgroundColor: {
             type: String,
