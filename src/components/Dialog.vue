@@ -33,11 +33,10 @@
 
             <slot name="buttons">
                 <div
-                    v-if="buttons"
                     :class="`light-modal-buttons ${buttonsContainerClass}`"
                     :style="{ 'border-color': this.contrastColor() }"
                 >
-                    <template v-for="(button, index) in buttons" :key="index">
+                    <template v-if="buttons" v-for="(button, index) in buttons" :key="index">
                         <button
                             v-bind="button.options"
                             type="button"
