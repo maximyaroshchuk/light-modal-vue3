@@ -2,17 +2,23 @@
     <Container v-if="show">
         <Dialog
             ref="dialog"
+            :name="name"
             :title="title"
             :draggable="draggable"
             :resizable="resizable"
             :width="width"
             :height="height"
-            :background-color="backgroundColor"
+            :background-color="background"
             :buttons="buttons"
-            :close-button-text="closeButtonText"
-            :top-close-icon-container-class="topCloseIconContainerClass"
-            :close-icon-class="closeIconClass"
-            :buttons-container-class="buttonsContainerClass"
+            :close-button-text="dcbText"
+            :top-close-icon-container-class="tcicClass"
+            :close-icon-class="tciClass"
+            :buttons-container-class="bbcClass"
+            @before-open="executeCallback"
+            @after-open="executeCallback"
+            @before-close="executeCallback"
+            @after-close="executeCallback"
+            @on-submit="executeCallback"
         >
             <template v-slot:content>
                 <slot name="content"></slot>
@@ -29,30 +35,34 @@ export default {
     name: 'LightModal',
     data() {
       return {
-          show: true
+          show: pluginCore.modals[this.$props.name] || false,
       }
     },
     props: {
-        buttonsContainerClass: {
+        name: {
+            type: String,
+            required: true,
+        },
+        bbcClass: {
             type: [Array, Object],
             default() {
                 return [];
             },
         },
-        topCloseIconContainerClass: {
+        tcicClass: {
             type: String,
         },
-        closeIconClass: {
+        tciClass: {
             type: String,
         },
-        closeButtonText: {
+        dcbText: {
             type: String,
             default: 'Close'
         },
         buttons: {
             type: Array,
         },
-        backgroundColor: {
+        background: {
             type: String,
             default: '#ffffff'
         },
@@ -74,7 +84,7 @@ export default {
         width: {
             type: Number,
             default: 400,
-        }
+        },
     },
     components: {
         Container,
@@ -85,11 +95,50 @@ export default {
         window.addEventListener('modal-close', this.close);
     },
     methods: {
-        open() {
-            this.show = true;
+        open(event) {
+            const name = event.detail.name;
+
+            if (name === this.name) {
+                this.$emit("before-open");
+                this.show = true;
+                this.$emit("after-open");
+            }
         },
-        close() {
-            this.show = false;
+        close(event) {
+            const name = event.detail.name;
+
+            if (name === this.name) {
+                const forms = this.$refs.dialog?.$el?.querySelectorAll('form');
+
+                if (forms && forms.length > 0) {
+                    let isValid = true;
+
+                    forms.forEach((form) => {
+                        if (!form.checkValidity()) {
+                            form.reportValidity();
+                            isValid = false;
+                        }
+                    });
+
+                    if (isValid) {
+                        forms.forEach((form) => {
+                            form.submit();
+                        });
+
+                        this.show = false;
+                        this.$emit("on-submit");
+                    }
+                } else {
+                    this.$emit("before-close");
+                    this.show = false;
+                    this.$emit("after-close");
+                }
+            }
+        },
+        executeCallback(callback) {
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
         },
     },
     computed: {

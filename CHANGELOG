@@ -1,4 +1,33 @@
-v 1.1.1
+v 1.1.1 - 1.1.6
 
-* Props buttonsContainerClass, closeIcon, closeButtonText, buttons, backgroundColor, draggable, resizable
+* Props name, buttons-container-class close-button-text, buttons, close-icon-class, background-color, draggable, resizable, top-close-icon-container-class
+    1. name - Unique modal name
+    2. draggable - Enable draggable for the modal
+    3. resizable - Enable resizable for the modal
+    4. buttons-container-class - Modal bottom buttons container custom classes
+    5. close-button-text - Custom text to default bottom close button
+    6. buttons - Add your custom buttons to modal
+    7. close-icon-class - Top modal close button icon class
+    8. background-color - Add custom background color to modal this poperty accepts all color formats text, hex, rgb
+    9. top-close-icon-container-class - Modal top button container custom classes
+* Added ability to change background color
 * Add new utils to Normalize contrast when you change background
+
+v 1.2.0
+
+* Added multi-window modals window functionality
+* Added the ability to work with forms in a modal, now the modal will submit the form when closed
+* Added closeAll method to close all already opened modals
+* Added callbacks @before-open, @after-open, @before-close, @after-close, @on-submit
+
+-- Minor changes
+    1. Added custom bottom button property to set button type - type
+    2. Fixed error with button when you don't pass click()
+    3. Improve resize to work with multi-window modals
+    4. Change default props names
+        buttons-container-class > bbc-class
+        close-icon-class > tci-class
+        top-close-icon-container-class > tcic-class
+        close-button-text > dcb-text
+
+How to use new change you will find on doc https://lightmodal.netlify.app/guide/getting-started

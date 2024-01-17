@@ -4,13 +4,16 @@ import PluginCore from "./PluginCore";
 const install = (app) => {
     app.component('l-modal', Modal);
 
-    app.config.globalProperties.$modal = {
-        open() {
-            PluginCore.open();
+    app.config.globalProperties.$modals = {
+        open(name) {
+            PluginCore.open(name);
         },
-        close() {
-            PluginCore.close();
+        close(name) {
+            PluginCore.close(name);
         },
+        closeAll(name) {
+            PluginCore.closeAll(name);
+        }
     };
 };
 

@@ -5,24 +5,24 @@
 ### How to install ###
 
 ```git
-npm i light-modal-vue3
+npm i light-modal-vue3@latest
 ```
 
 Easy to use, highly customizable Vue.js modal library.
 
-### 😎 [Get started](https://lightmodal.netlify.app/)
+### 🚀 [Get started](https://lightmodal.netlify.app/)
 
-### 🤓 [Documentation](https://lightmodal.netlify.app/plugin/getting-started)
+### 📚 [Documentation](https://lightmodal.netlify.app/guide/getting-started)
 
-### 🤖 [Changelog](https://github.com/maximyaroshchuk/light-modal-vue3/tags)
+### 🤖 [Changelog](https://github.com/maximyaroshchuk/light-modal-vue3/blob/main/CHANGELOG)
 
-### 🙌 [Looking for maintainers](https://github.com/maximyaroshchuk/light-modal-vue3/issues/)
+### ⚡️ [Current issues](https://github.com/maximyaroshchuk/light-modal-vue3/issues/)
 
 ### 💰 [Sponsorship](https://www.buymeacoffee.com/rainoldwebi)
 
 # Sponsorship & support
 
-**If you are using this project please consider sponsoring it's further development & bug fixes**
+**If you use this project, please consider sponsoring its further development and create bug fixing [tasks](https://github.com/maximyaroshchuk/light-modal-vue3/issues/), i will try to fix them extremely promptly.**
 
 Links: https://www.buymeacoffee.com/rainoldwebi
 

@@ -10,7 +10,7 @@
             <button
                 :class="['light-modal-close-button', !closeIconClass && 'light-modal-close-icon', getIconColorClass()]"
                 :title="'Close'"
-                @click="this.$modal.close()"
+                @click="this.$modals.close(name)"
             >
                 <i v-if="closeIconClass" :class="closeIconClass" />
             </button>
@@ -27,8 +27,7 @@
                 ref="dialogBody"
                 class="light-modal-body"
             >
-                <slot name="content">
-                </slot>
+                <slot name="content" />
             </div>
 
             <slot name="buttons">
@@ -39,9 +38,9 @@
                     <template v-if="buttons" v-for="(button, index) in buttons" :key="index">
                         <button
                             v-bind="button.options"
-                            type="button"
+                            :type="button.type"
                             :class="button.class"
-                            @click="button.click()"
+                            @click="handleButtonClick(button)"
                             v-html="button.text"
                         />
                     </template>
@@ -50,7 +49,7 @@
                         type="button"
                         :style="{ color: contrastColor() }"
                         class="light-button-close"
-                        @click="PluginCore.close();"
+                        @click="PluginCore.close(name);"
                     >
                         {{ closeButtonText }}
                     </button>
@@ -58,7 +57,7 @@
             </slot>
         </div>
 
-        <div v-if="resizable" class="light-modal-resizer-triangle"></div>
+        <div v-if="resizable" :class="`light-modal-resizer-triangle ${name}-resizer-triangle`"></div>
     </div>
 </template>
 
@@ -77,6 +76,10 @@ export default {
         };
     },
     props: {
+        name: {
+            type: String,
+            required: true,
+        },
         closeButtonText: {
             type: String,
         },
@@ -116,15 +119,28 @@ export default {
         if (this.draggable) {
             this.draggableUtility = new Draggable(this.$refs.dialogElement);
         }
-        const resizerElement = document.querySelector('.light-modal-resizer-triangle');
+        const resizerElement = document.querySelector(`.${this.name}-resizer-triangle`);
         if (this.resizable) {
             this.resizableUtility = new Resizable(this.$refs.dialogElement, resizerElement, {
-                minWidth: 150,
-                minHeight: 200,
+                minWidth: 200,
+                minHeight: 250,
             });
         }
     },
     methods: {
+        handleButtonClick(button) {
+            if (button.type === "submit") {
+                const form = this.$refs.dialogBody.querySelector('form');
+                if (form) {
+                    if (form.checkValidity()){
+                        form.submit();
+                    } else {
+                        form.reportValidity();
+                    }
+                }
+            }
+            button.click();
+        },
         initModalPosition() {
             const updateModalPosition = () => {
                 const windowWidth = window.innerWidth;
@@ -172,6 +188,8 @@ export default {
         position: absolute;
         top: 16px;
         right: 16px;
+        height: 24px;
+
         .light-modal-close-button {
             width: 24px;
             height: 24px;
@@ -213,6 +231,8 @@ export default {
             font-weight: 600;
             font-size: 20px;
             line-height: 24px;
+            width: calc(100% - 55px);
+
             &.draggable {
                 cursor: move;
             }
