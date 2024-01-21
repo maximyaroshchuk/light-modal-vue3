@@ -1,5 +1,5 @@
 import Modal from './components/Modal.vue';
-import PluginCore from "./PluginCore";
+import PluginCore from './PluginCore';
 
 const install = (app) => {
     app.component('l-modal', Modal);

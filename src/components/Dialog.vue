@@ -20,7 +20,7 @@
             <div
                 :class="`light-modal-content-title ${draggableClass}`"
             >
-                {{ title }}
+                <slot name="title" />
             </div>
 
             <div
@@ -30,31 +30,30 @@
                 <slot name="content" />
             </div>
 
-            <slot name="buttons">
-                <div
-                    :class="`light-modal-buttons ${buttonsContainerClass}`"
-                    :style="{ 'border-color': this.contrastContainerBorder() }"
+            <div
+                :class="`light-modal-buttons ${buttonsContainerClass}`"
+                :style="{ 'border-color': this.contrastContainerBorder() }"
+            >
+                <button
+                    v-if="buttons"
+                    v-for="(button, index) in buttons"
+                    :key="index"
+                    v-bind="button.options"
+                    :type="button.type"
+                    :class="button.class"
+                    @click="handleButtonClick(button)"
+                    v-html="button.text"
+                />
+                <button
+                    v-else
+                    type="button"
+                    :style="{ color: contrastColor() }"
+                    class="light-button-close"
+                    @click="PluginCore.close(name);"
                 >
-                    <template v-if="buttons" v-for="(button, index) in buttons" :key="index">
-                        <button
-                            v-bind="button.options"
-                            :type="button.type"
-                            :class="button.class"
-                            @click="handleButtonClick(button)"
-                            v-html="button.text"
-                        />
-                    </template>
-                    <button
-                        v-else
-                        type="button"
-                        :style="{ color: contrastColor() }"
-                        class="light-button-close"
-                        @click="PluginCore.close(name);"
-                    >
-                        {{ closeButtonText }}
-                    </button>
-                </div>
-            </slot>
+                    {{ closeButtonText }}
+                </button>
+            </div>
         </div>
 
         <div v-if="resizable" :class="`light-modal-resizer-triangle ${name}-resizer-triangle`"></div>
@@ -95,9 +94,6 @@ export default {
         resizable: {
             type: Boolean,
         },
-        title: {
-            type: String
-        },
         height: {
             type: Number,
         },
@@ -111,7 +107,7 @@ export default {
             type: Array,
         },
         buttonsContainerClass: {
-            type: [Object, Array],
+            type: String,
         },
     },
     mounted() {
@@ -184,6 +180,11 @@ export default {
     color: black;
     border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    &.dragging {
+        user-select: none;
+    }
+
     .light-modal-top-right-buttons {
         position: absolute;
         top: 16px;

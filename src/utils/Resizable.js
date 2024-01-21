@@ -27,7 +27,7 @@ export default class Resizable {
             const deltaY = event.clientY - this.startResizeY;
 
             const newWidth = this.element.offsetWidth + deltaX;
-            const newHeight = this.element.offsetHeight - deltaY;
+            const newHeight = this.element.offsetHeight + deltaY;
 
             this.setSize(newWidth, newHeight);
             this.startResizeX = event.clientX;

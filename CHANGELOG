@@ -31,3 +31,15 @@ v 1.2.0
         close-button-text > dcb-text
 
 How to use new change you will find on doc https://lightmodal.netlify.app/guide/getting-started
+
+v 1.2.1 - 1.2.2
+
+!!!Critical changes
+
+* Fix error (Module not found: Error: Can't resolve './namedColors') when you install plug-in
+
+v 1.2.3
+
+* Resizable logic made more intuitive
+* Property ":title" finally removed from the plugin
+* Refactoring code

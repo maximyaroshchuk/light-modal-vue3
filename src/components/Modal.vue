@@ -20,7 +20,10 @@
             @after-close="executeCallback"
             @on-submit="executeCallback"
         >
-            <template v-slot:content>
+            <template #title>
+                <slot name="title"></slot>
+            </template>
+            <template #content>
                 <slot name="content"></slot>
             </template>
         </Dialog>
@@ -44,16 +47,16 @@ export default {
             required: true,
         },
         bbcClass: {
-            type: [Array, Object],
-            default() {
-                return [];
-            },
+            type: String,
+            default: ''
         },
         tcicClass: {
             type: String,
+            default: ''
         },
         tciClass: {
             type: String,
+            default: ''
         },
         dcbText: {
             type: String,

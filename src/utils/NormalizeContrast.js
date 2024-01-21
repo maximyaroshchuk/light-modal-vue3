@@ -1,4 +1,3 @@
-import namedColors from './namedColors';
 export default class NormalizeContrast {
     constructor(color) {
         this.color = this.normalizeColor(color);
@@ -11,10 +10,11 @@ export default class NormalizeContrast {
             return color;
         }
 
-        const namedColor = namedColors[color.toLowerCase()];
-        if (namedColor) {
-            return namedColor;
-        }
+        // Already disabled in future after rework this functionality will be added
+        // const namedColor = namedColors[color.toLowerCase()];
+        // if (namedColor) {
+        //     return namedColor;
+        // }
 
         const match = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)$/);
         if (match) {

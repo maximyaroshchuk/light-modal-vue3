@@ -5,7 +5,8 @@ export default class Draggable {
         this.isDragging = false;
         this.startDragX = 0;
         this.startDragY = 0;
-        
+
+        this.modalBody = document.querySelector('.light-modal-dialog');
         this.element.addEventListener('mousedown', this.handleMouseDown.bind(this));
         document.addEventListener('mousemove', this.handleDrag.bind(this));
         document.addEventListener('mouseup', this.stopDrag.bind(this));
@@ -16,6 +17,7 @@ export default class Draggable {
             this.isDragging = true;
             this.startDragX = event.clientX - this.element.offsetLeft;
             this.startDragY = event.clientY - this.element.offsetTop;
+            this.modalBody.classList.add('dragging');
         }
     }
 
@@ -34,5 +36,6 @@ export default class Draggable {
 
     stopDrag() {
         this.isDragging = false;
+        this.modalBody.classList.remove('dragging');
     }
 }
