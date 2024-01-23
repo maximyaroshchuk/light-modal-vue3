@@ -43,3 +43,9 @@ v 1.2.3
 * Resizable logic made more intuitive
 * Property ":title" finally removed from the plugin
 * Refactoring code
+
+v 1.2.31 - 1.2.33
+* Fix minor bugs
+
+v 1.2.34
+* Update doc about buttons

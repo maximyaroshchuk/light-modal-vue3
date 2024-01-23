@@ -2,15 +2,15 @@
     <div
         ref="dialogElement"
         class="light-modal-dialog"
-        :style="`width: ${width}px; height: ${height}px; top: ${top}px; left: ${left}px; background: ${backgroundColor}; color: ${contrastColor()}`"
+        :style="`width: ${width}px; height: ${height}px; top: ${top}px; left: ${left}px; background: ${backgroundColor}; color: ${contrastColor}`"
     >
         <div
             :class="`light-modal-top-right-buttons ${topCloseIconContainerClass}`"
         >
             <button
-                :class="['light-modal-close-button', !closeIconClass && 'light-modal-close-icon', getIconColorClass()]"
+                :class="['light-modal-close-button', !closeIconClass && 'light-modal-close-icon', getIconColorClass]"
                 :title="'Close'"
-                @click="this.$modals.close(name)"
+                @click="PluginCore.close(name)"
             >
                 <i v-if="closeIconClass" :class="closeIconClass" />
             </button>
@@ -32,7 +32,7 @@
 
             <div
                 :class="`light-modal-buttons ${buttonsContainerClass}`"
-                :style="{ 'border-color': this.contrastContainerBorder() }"
+                :style="{ 'border-color': this.contrastContainerBorder }"
             >
                 <button
                     v-if="buttons"
@@ -40,6 +40,7 @@
                     :key="index"
                     v-bind="button.options"
                     :type="button.type"
+                    :title="button.title"
                     :class="button.class"
                     @click="handleButtonClick(button)"
                     v-html="button.text"
@@ -47,7 +48,8 @@
                 <button
                     v-else
                     type="button"
-                    :style="{ color: contrastColor() }"
+                    title="Close"
+                    :style="{ color: contrastColor }"
                     class="light-button-close"
                     @click="PluginCore.close(name);"
                 >
@@ -181,7 +183,7 @@ export default {
     border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
-    &.dragging {
+    &.changing {
         user-select: none;
     }
 

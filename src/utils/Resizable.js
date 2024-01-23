@@ -10,6 +10,7 @@ export default class Resizable {
         this.startResizeX = 0;
         this.startResizeY = 0;
 
+        this.modalBody = document.querySelector('.light-modal-dialog');
         this.resizer.addEventListener('mousedown', this.startResize.bind(this));
         document.addEventListener('mousemove', this.handleResize.bind(this));
         document.addEventListener('mouseup', this.stopResize.bind(this));
@@ -19,6 +20,7 @@ export default class Resizable {
         this.isResizing = true;
         this.startResizeX = event.clientX;
         this.startResizeY = event.clientY;
+        this.modalBody.classList.add('changing');
     }
 
     handleResize(event) {
@@ -56,5 +58,6 @@ export default class Resizable {
 
     stopResize() {
         this.isResizing = false;
+        this.modalBody.classList.remove('changing');
     }
 }

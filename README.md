@@ -14,6 +14,8 @@ Easy to use, highly customizable Vue.js modal library.
 
 ### 📚 [Documentation](https://lightmodal.netlify.app/guide/getting-started)
 
+### 💻 [Live demo](https://lightmodal-demo.netlify.app/)
+
 ### 🤖 [Changelog](https://github.com/maximyaroshchuk/light-modal-vue3/blob/main/CHANGELOG)
 
 ### ⚡️ [Current issues](https://github.com/maximyaroshchuk/light-modal-vue3/issues/)

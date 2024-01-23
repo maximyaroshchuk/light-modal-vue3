@@ -17,7 +17,7 @@ export default class Draggable {
             this.isDragging = true;
             this.startDragX = event.clientX - this.element.offsetLeft;
             this.startDragY = event.clientY - this.element.offsetTop;
-            this.modalBody.classList.add('dragging');
+            this.modalBody.classList.add('changing');
         }
     }
 
@@ -36,6 +36,6 @@ export default class Draggable {
 
     stopDrag() {
         this.isDragging = false;
-        this.modalBody.classList.remove('dragging');
+        this.modalBody.classList.remove('changing');
     }
 }
