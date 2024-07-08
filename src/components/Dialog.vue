@@ -1,8 +1,8 @@
 <template>
     <div
         ref="dialogElement"
-        class="light-modal-dialog"
-        :style="`width: ${width}px; height: ${height}px; top: ${top}px; left: ${left}px; background: ${backgroundColor}; color: ${contrastColor}`"
+        :class="['light-modal-dialog', { fullscreen: this.fullscreen }]"
+        :style="getModalStyles"
     >
         <div
             :class="`light-modal-top-right-buttons ${topCloseIconContainerClass}`"
@@ -31,7 +31,7 @@
             </div>
 
             <div
-                :class="`light-modal-buttons ${buttonsContainerClass}`"
+                :class="`light-modal-buttons ${bottomButtonsContainerClass}`"
                 :style="{ 'border-color': this.contrastContainerBorder }"
             >
                 <button
@@ -51,14 +51,14 @@
                     title="Close"
                     :style="{ color: contrastColor }"
                     class="light-button-close"
-                    @click="PluginCore.close(name);"
+                    @click="PluginCore.close(name)"
                 >
                     {{ closeButtonText }}
                 </button>
             </div>
         </div>
 
-        <div v-if="resizable" :class="`light-modal-resizer-triangle ${name}-resizer-triangle`"></div>
+        <div v-if="resizable && !fullscreen" :class="`light-modal-resizer-triangle ${name}-resizer-triangle`"></div>
     </div>
 </template>
 
@@ -96,11 +96,14 @@ export default {
         resizable: {
             type: Boolean,
         },
+        fullscreen: {
+            type: Boolean,
+        },
         height: {
-            type: Number,
+            type: String,
         },
         width: {
-            type: Number,
+            type: String,
         },
         closeIconClass: {
             type: String,
@@ -108,17 +111,17 @@ export default {
         buttons: {
             type: Array,
         },
-        buttonsContainerClass: {
+        bottomButtonsContainerClass: {
             type: String,
         },
     },
     mounted() {
         this.initModalPosition();
-        if (this.draggable) {
+        if (this.draggable && !this.fullscreen) {
             this.draggableUtility = new Draggable(this.$refs.dialogElement);
         }
         const resizerElement = document.querySelector(`.${this.name}-resizer-triangle`);
-        if (this.resizable) {
+        if (this.resizable && !this.fullscreen) {
             this.resizableUtility = new Resizable(this.$refs.dialogElement, resizerElement, {
                 minWidth: 200,
                 minHeight: 250,
@@ -140,36 +143,71 @@ export default {
             button.click();
         },
         initModalPosition() {
-            const updateModalPosition = () => {
-                const windowWidth = window.innerWidth;
-                const windowHeight = window.innerHeight;
+            let isSizeChanged = false;
 
-                this.left = (windowWidth - this.width) / 2;
-                this.top = (windowHeight - this.height) / 2;
+            const updateModalPosition = () => {
+                if (!isSizeChanged) {
+                    const [windowWidth, windowHeight] = [window.innerWidth, window.innerHeight];
+                    const modalWidth = getAbsoluteValue(this.width, windowWidth);
+                    const modalHeight = getAbsoluteValue(this.height, windowHeight);
+
+                    const newLeft = (windowWidth - modalWidth) / 2;
+                    const newTop = (windowHeight - modalHeight) / 2;
+
+                    if (this.left !== newLeft || this.top !== newTop) {
+                        [this.left, this.top] = [newLeft, newTop];
+                    }
+                }
+            };
+
+            const getAbsoluteValue = (value, windowSize) => {
+                if (typeof value === 'number') return value;
+                if (value.endsWith('%')) return (parseFloat(value) / 100) * windowSize;
+                if (value.endsWith('px')) isSizeChanged = true;
+                return parseFloat(value) || 0;
             };
 
             updateModalPosition();
             window.addEventListener('resize', updateModalPosition);
         },
+    },
+    computed: {
         getIconColorClass() {
             const contrastInstance = new NormalizeContrast(this.backgroundColor);
             return contrastInstance.getContrastColor() === 'light' ? 'light-icon' : 'dark-icon';
         },
         contrastContainerBorder() {
             const contrastInstance = new NormalizeContrast(this.backgroundColor);
-            return contrastInstance.getContrastColor() === 'light' ? '#eeeeee' : '#3b3b3b';
+            return contrastInstance.getContrastColor() === 'light' ? '#3b3b3b' : '#eeeeee';
         },
         contrastColor() {
+            console.log('this.backgroundColor', this.backgroundColor)
             const contrastInstance = new NormalizeContrast(this.backgroundColor);
             return contrastInstance.getContrastColor() === 'light' ? '#000000' : '#ffffff';
         },
-    },
-    computed: {
+        getModalStyles() {
+            if (this.fullscreen) {
+                return {
+                    'height': '100%',
+                    'width': '100%',
+                    'background': this.backgroundColor,
+                    'color': this.contrastColor,
+                }
+            }
+            return {
+                'height': this.height,
+                'width': this.width,
+                'top': this.top + 'px',
+                'left': this.left + 'px',
+                'background': this.backgroundColor,
+                'color': this.contrastColor
+            }
+        },
         PluginCore() {
             return PluginCore
         },
         draggableClass() {
-            return this.draggable ? 'draggable' : ''
+            return this.draggable && !this.fullscreen ? 'draggable' : ''
         },
     }
 };
@@ -183,7 +221,11 @@ export default {
     border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
-    &.changing {
+    &.fullscreen {
+        border-radius: 0;
+    }
+
+    &.resizing {
         user-select: none;
     }
 
@@ -259,6 +301,7 @@ export default {
             border-top: 1px solid #eee;
 
             .light-button-close {
+                cursor: pointer;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;

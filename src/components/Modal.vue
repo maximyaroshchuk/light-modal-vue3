@@ -10,10 +10,11 @@
             :height="height"
             :background-color="background"
             :buttons="buttons"
-            :close-button-text="dcbText"
-            :top-close-icon-container-class="tcicClass"
-            :close-icon-class="tciClass"
-            :buttons-container-class="bbcClass"
+            :fullscreen="fullscreen"
+            :close-button-text="closeButtonText"
+            :top-close-icon-container-class="topCloseIconContainerClass"
+            :top-close-icon-class="topCloseIconClass"
+            :bottom-buttons-container-class="bottomButtonsContainerClass"
             @before-open="executeCallback"
             @after-open="executeCallback"
             @before-close="executeCallback"
@@ -32,13 +33,13 @@
 <script>
 import Dialog from '../components/Dialog.vue';
 import Container from '../components/Container.vue';
-import pluginCore from '../PluginCore';
+import PluginCore from '../PluginCore';
 
 export default {
     name: 'LightModal',
     data() {
       return {
-          show: pluginCore.modals[this.$props.name] || false,
+          show: PluginCore.modals[this.$props.name] || false,
       }
     },
     props: {
@@ -46,19 +47,27 @@ export default {
             type: String,
             required: true,
         },
-        bbcClass: {
+        bottomButtonsContainerClass: {
             type: String,
             default: ''
         },
-        tcicClass: {
+        submitFormBeforeClose: {
+            type: Boolean,
+            default: true,
+        },
+        closeModalOnEscape: {
+            type: Boolean,
+            default: false,
+        },
+        topCloseIconContainerClass: {
             type: String,
             default: ''
         },
-        tciClass: {
+        topCloseIconClass: {
             type: String,
             default: ''
         },
-        dcbText: {
+        closeButtonText: {
             type: String,
             default: 'Close'
         },
@@ -81,31 +90,55 @@ export default {
             default: false,
         },
         height: {
-            type: Number,
-            default: 350,
+            type: String,
+            default: '350px',
         },
         width: {
-            type: Number,
-            default: 400,
+            type: String,
+            default: '400px',
         },
+        fullscreen: {
+            type: Boolean,
+            default: false,
+        }
     },
     components: {
         Container,
         Dialog,
     },
     created() {
+        if (this.closeModalOnEscape) {
+            window.addEventListener('keydown', this.handleEscKey);
+        }
         window.addEventListener('modal-open', this.open);
         window.addEventListener('modal-close', this.close);
     },
     methods: {
+        handleEscKey(event) {
+            if (event.key === 'Escape') {
+                PluginCore.close(this.name)
+            }
+        },
         open(event) {
             const name = event.detail.name;
 
             if (name === this.name) {
+                if (!this.isWidthOrHeightValid(this.width) || !this.isWidthOrHeightValid(this.height)) {
+                    throw new Error('Width and height value must be specified in percentages (%) or pixels (px).');
+                }
+
                 this.$emit("before-open");
                 this.show = true;
                 this.$emit("after-open");
             }
+        },
+        isWidthOrHeightValid(value) {
+            if (typeof value === 'number') {
+                return true;
+            } else if (typeof value === 'string') {
+                return value.endsWith('%') || value.endsWith('px');
+            }
+            return false;
         },
         close(event) {
             const name = event.detail.name;
@@ -117,16 +150,20 @@ export default {
                     let isValid = true;
 
                     forms.forEach((form) => {
-                        if (!form.checkValidity()) {
-                            form.reportValidity();
-                            isValid = false;
+                        if (this.submitFormBeforeClose) {
+                            if (!form.checkValidity()) {
+                                form.reportValidity();
+                                isValid = false;
+                            }
                         }
                     });
 
                     if (isValid) {
+                        if (this.submitFormBeforeClose) {
                         forms.forEach((form) => {
                             form.submit();
                         });
+                        }
 
                         this.show = false;
                         this.$emit("on-submit");
@@ -144,12 +181,10 @@ export default {
             }
         },
     },
-    computed: {
-        pluginCore() {
-            return pluginCore;
-        },
-    },
     destroyed() {
+        if (this.closeModalOnEscape) {
+            window.removeEventListener('keydown', this.handleEscKey);
+        }
         window.removeEventListener('modal-open', this.open);
         window.removeEventListener('modal-close', this.close);
     },
